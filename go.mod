@@ -1,4 +1,4 @@
-module changeme
+module github.com/owbird/svault
 
 go 1.18
 

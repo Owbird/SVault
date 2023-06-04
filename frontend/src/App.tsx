@@ -2,11 +2,15 @@ import { Badge, Grid, GridItem, HStack, Text, VStack } from "@chakra-ui/react";
 import { Fragment, useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { FcFile, FcFolder } from "react-icons/fc";
-import { GetDirs, GetUserHome, OpenFile } from "../wailsjs/go/main/App";
-import { main } from "../wailsjs/go/models";
+import { dir } from "../wailsjs/go/models";
+import {
+  GetDirs,
+  GetUserHome,
+  OpenFile,
+} from "../wailsjs/go/uifunctions/UIFunctions";
 
 const App = () => {
-  const [dirList, setDirList] = useState<main.DirList[]>();
+  const [dirList, setDirList] = useState<dir.DirList[]>();
   const [paths, setPaths] = useState<string[]>([]);
 
   const handlePathClick = (path: string) => {

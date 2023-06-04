@@ -22,9 +22,10 @@ func main() {
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		OnStartup: app.Startup,
+		OnStartup: app.startup,
 		Bind: []interface{}{
 			app,
+			app.UIFunctions,
 		},
 	})
 

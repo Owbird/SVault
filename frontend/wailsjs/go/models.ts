@@ -1,4 +1,4 @@
-export namespace main {
+export namespace dir {
 	
 	export class DirList {
 	    name: string;
