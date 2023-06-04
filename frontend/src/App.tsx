@@ -47,7 +47,7 @@ const App = () => {
           </Badge>
         ))}
       </HStack>
-      <Grid templateColumns="repeat(5, 1fr)" gap={6}>
+      <Grid templateColumns="repeat(7, 1fr)" gap={2}>
         {dirList?.map((dir) => (
           <GridItem
             onClick={() =>
@@ -56,7 +56,7 @@ const App = () => {
             key={dir.path}
           >
             <VStack>
-              {dir.isDir ? <FcFolder /> : <FcFile />}
+              {dir.isDir ? <FcFolder size={60} /> : <FcFile size={60} />}
               <Text>{dir.name}</Text>
             </VStack>
           </GridItem>

@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"runtime"
 )
 
@@ -17,6 +18,7 @@ type DirList struct {
 	Name  string `json:"name"`
 	IsDir bool   `json:"isDir"`
 	Path  string `json:"path"`
+	Type  string `json:"type"`
 }
 
 func NewApp() *App {
@@ -91,10 +93,15 @@ func (a *App) GetDirs(p string) []DirList {
 
 	for _, file := range files {
 
+		path := path.Join(dir, file.Name())
+
+		file_type := filepath.Ext(path)
+
 		dirList = append(dirList, DirList{
 			Name:  file.Name(),
 			IsDir: file.IsDir(),
-			Path:  path.Join(dir, file.Name()),
+			Type:  file_type,
+			Path:  path,
 		})
 	}
 
