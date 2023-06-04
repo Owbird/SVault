@@ -9,3 +9,7 @@ export function GetDirs(arg1) {
 export function GetUserHome() {
   return window['go']['main']['App']['GetUserHome']();
 }
+
+export function OpenFile(arg1) {
+  return window['go']['main']['App']['OpenFile'](arg1);
+}

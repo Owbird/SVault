@@ -2,7 +2,7 @@ import { Badge, Grid, GridItem, HStack, Text, VStack } from "@chakra-ui/react";
 import { Fragment, useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { FcFile, FcFolder } from "react-icons/fc";
-import { GetDirs, GetUserHome } from "../wailsjs/go/main/App";
+import { GetDirs, GetUserHome, OpenFile } from "../wailsjs/go/main/App";
 import { main } from "../wailsjs/go/models";
 
 const App = () => {
@@ -50,7 +50,9 @@ const App = () => {
       <Grid templateColumns="repeat(5, 1fr)" gap={6}>
         {dirList?.map((dir) => (
           <GridItem
-            onClick={() => (dir.isDir ? handlePath(dir.path, dir.name) : null)}
+            onClick={() =>
+              dir.isDir ? handlePath(dir.path, dir.name) : OpenFile(dir.path)
+            }
             key={dir.path}
           >
             <VStack>

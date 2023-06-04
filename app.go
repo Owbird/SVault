@@ -4,7 +4,9 @@ import (
 	"context"
 	"log"
 	"os"
+	"os/exec"
 	"path"
+	"runtime"
 )
 
 type App struct {
@@ -33,6 +35,34 @@ func (a *App) GetUserHome() string {
 	}
 
 	return home_dir
+}
+
+func (a *App) OpenFile(path string) {
+
+	var cmd string
+	var args []string
+
+	if runtime.GOOS == "linux" {
+		cmd = "xdg-open"
+		args = []string{
+			path,
+		}
+	} else if runtime.GOOS == "darwin" {
+		cmd = "open"
+		args = []string{
+			path,
+		}
+	} else {
+		cmd = "cmd"
+		args = []string{
+			"/c",
+			"start",
+			path,
+		}
+	}
+
+	exec.Command(cmd, args...).Run()
+
 }
 
 func (a *App) GetDirs(p string) []DirList {

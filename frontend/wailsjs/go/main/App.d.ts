@@ -5,3 +5,5 @@ import {main} from '../models';
 export function GetDirs(arg1:string):Promise<Array<main.DirList>>;
 
 export function GetUserHome():Promise<string>;
+
+export function OpenFile(arg1:string):Promise<void>;
