@@ -61,13 +61,8 @@ func (df *DirFunctions) GetDirs(p string) []DirList {
 	dirList := []DirList{}
 
 	if p == "/" {
-		home_dir, err := os.UserHomeDir()
 
-		if err != nil {
-			log.Println(err)
-		}
-
-		dir = home_dir
+		dir = df.GetUserHome()
 
 	} else {
 		dir = p
