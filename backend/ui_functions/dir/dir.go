@@ -9,7 +9,7 @@ import (
 	"runtime"
 )
 
-type DirList struct {
+type Dir struct {
 	Name  string `json:"name"`
 	IsDir bool   `json:"isDir"`
 	Path  string `json:"path"`
@@ -55,10 +55,10 @@ func (df *DirFunctions) OpenFile(path string) {
 	exec.Command(cmd, args...).Run()
 }
 
-func (df *DirFunctions) GetDirs(p string) []DirList {
+func (df *DirFunctions) GetDirs(p string) []Dir {
 	var dir string
 
-	dirList := []DirList{}
+	dirList := []Dir{}
 
 	if p == "/" {
 
@@ -80,7 +80,7 @@ func (df *DirFunctions) GetDirs(p string) []DirList {
 
 		file_type := filepath.Ext(path)
 
-		dirList = append(dirList, DirList{
+		dirList = append(dirList, Dir{
 			Name:  file.Name(),
 			IsDir: file.IsDir(),
 			Type:  file_type,

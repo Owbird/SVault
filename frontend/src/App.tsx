@@ -1,4 +1,15 @@
-import { Badge, Grid, GridItem, HStack, Text, VStack } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Button,
+  Checkbox,
+  CheckboxGroup,
+  Grid,
+  GridItem,
+  HStack,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { Fragment, useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { FcFile, FcFolder } from "react-icons/fc";
@@ -10,14 +21,20 @@ import {
 } from "../wailsjs/go/uifunctions/UIFunctions";
 
 const App = () => {
-  const [dirList, setDirList] = useState<dir.DirList[]>();
+  const [dirList, setDirList] = useState<dir.Dir[]>();
   const [paths, setPaths] = useState<string[]>([]);
+  const [selectedPaths, setSelectedPaths] = useState<dir.Dir[]>([]);
+
+  const getDirs = (path: string) => {
+    GetDirs(path).then(setDirList);
+    setSelectedPaths([]);
+  };
 
   const handlePathClick = (path: string) => {
     if (paths.length > 1 && paths[paths.length - 1] !== path) {
       const newPaths = paths.slice(0, paths.indexOf(path) + 1);
       setPaths(newPaths);
-      GetDirs(newPaths.join("/")).then(setDirList);
+      getDirs(newPaths.join("/"));
     }
   };
 
@@ -25,12 +42,20 @@ const App = () => {
     paths.pop();
 
     setPaths(paths);
-    GetDirs(paths.join("/")).then(setDirList);
+    getDirs(paths.join("/"));
   };
 
   const handlePath = (path: string, dir: string) => {
-    GetDirs(path).then(setDirList);
+    getDirs(path);
     setPaths([...paths, dir]);
+  };
+
+  const handlePathSelection = (dir: dir.Dir, isChecked: boolean) => {
+    if (isChecked) {
+      setSelectedPaths([...selectedPaths, dir]);
+    } else {
+      setSelectedPaths(selectedPaths.filter((d) => d.path !== dir.path));
+    }
   };
 
   useEffect(() => {
@@ -42,30 +67,41 @@ const App = () => {
       <HStack>
         {paths.length > 1 && <FaArrowLeft onClick={goBack} />}
         {paths.map((path) => (
-          <Badge
-            onClick={() => handlePathClick(path)}
-            padding={5}
-            background="green"
-          >
+          <Badge onClick={() => handlePathClick(path)} background="green">
             {path}
           </Badge>
         ))}
       </HStack>
-      <Grid templateColumns="repeat(7, 1fr)" gap={2}>
-        {dirList?.map((dir) => (
-          <GridItem
-            onClick={() =>
-              dir.isDir ? handlePath(dir.path, dir.name) : OpenFile(dir.path)
-            }
-            key={dir.path}
-          >
-            <VStack>
-              {dir.isDir ? <FcFolder size={60} /> : <FcFile size={60} />}
-              <Text>{dir.name}</Text>
-            </VStack>
-          </GridItem>
-        ))}
-      </Grid>
+      {selectedPaths.length > 0 && (
+        <Button colorScheme="blue">Encrpyt selected</Button>
+      )}
+
+      <CheckboxGroup>
+        <Grid templateColumns="repeat(7, 1fr)" gap={2}>
+          {dirList?.map((dir) => (
+            <GridItem key={dir.path}>
+              <VStack>
+                <Box
+                  onDoubleClick={() =>
+                    dir.isDir
+                      ? handlePath(dir.path, dir.name)
+                      : OpenFile(dir.path)
+                  }
+                >
+                  <Checkbox
+                    onChange={(event) =>
+                      handlePathSelection(dir, event.target.checked)
+                    }
+                  >
+                    {dir.isDir ? <FcFolder size={60} /> : <FcFile size={60} />}
+                    <Text>{dir.name}</Text>
+                  </Checkbox>
+                </Box>
+              </VStack>
+            </GridItem>
+          ))}
+        </Grid>
+      </CheckboxGroup>
     </Fragment>
   );
 };

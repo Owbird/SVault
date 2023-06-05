@@ -1,13 +1,13 @@
 export namespace dir {
 	
-	export class DirList {
+	export class Dir {
 	    name: string;
 	    isDir: boolean;
 	    path: string;
 	    type: string;
 	
 	    static createFrom(source: any = {}) {
-	        return new DirList(source);
+	        return new Dir(source);
 	    }
 	
 	    constructor(source: any = {}) {
