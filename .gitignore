@@ -1,4 +1,6 @@
 build/
+dist/
 node_modules
 frontend/dist
 *.deb
+*.spec
