@@ -1,0 +1,3 @@
+[submodule "lib/cryptify"]
+	path = lib/cryptify
+	url = https://github.com/Oval-Personal-Data-Wallet/cryptify/
