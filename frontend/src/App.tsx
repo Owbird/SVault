@@ -1,8 +1,9 @@
 import {
-  Badge,
   Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
   Button,
-  Checkbox,
   CheckboxGroup,
   Grid,
   GridItem,
@@ -11,8 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Fragment, useEffect, useState } from "react";
-import { FaArrowLeft } from "react-icons/fa";
-import { FcFile, FcFolder } from "react-icons/fc";
+import { BiChevronRight, BiLeftArrow } from "react-icons/bi";
 import { dir } from "../wailsjs/go/models";
 import {
   Encrypt,
@@ -21,6 +21,7 @@ import {
   OpenFile,
 } from "../wailsjs/go/uifunctions/UIFunctions";
 
+import { FcFile, FcFolder } from "react-icons/fc";
 const App = () => {
   const [dirList, setDirList] = useState<dir.Dir[]>();
   const [paths, setPaths] = useState<string[]>([]);
@@ -74,12 +75,24 @@ const App = () => {
   return (
     <Fragment>
       <HStack>
-        {paths.length > 1 && <FaArrowLeft onClick={goBack} />}
-        {paths.map((path) => (
-          <Badge onClick={() => handlePathClick(path)} background="green">
-            {path}
-          </Badge>
-        ))}
+        {paths.length > 1 && <BiLeftArrow onClick={goBack} />}
+
+        <Breadcrumb separator={<BiChevronRight size={30} color="gray.500" />}>
+          {paths.map((path) => {
+            const isActive = path === paths[paths.length - 1];
+            return (
+              <BreadcrumbItem
+                color={`${isActive && "white"}`}
+                bgColor={`${isActive && "green"}`}
+                padding={`${isActive && "5px"}`}
+              >
+                <BreadcrumbLink onClick={() => handlePathClick(path)}>
+                  {path}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            );
+          })}
+        </Breadcrumb>
       </HStack>
       {selectedPaths.length > 0 && (
         <Button onClick={handleSelected} colorScheme="blue">
@@ -88,7 +101,7 @@ const App = () => {
       )}
 
       <CheckboxGroup>
-        <Grid templateColumns="repeat(7, 1fr)" gap={2}>
+        <Grid templateColumns="repeat(8, 1fr)">
           {dirList?.map((dir) => (
             <GridItem key={dir.path}>
               <VStack>
@@ -98,15 +111,17 @@ const App = () => {
                       ? handlePath(dir.path, dir.name)
                       : OpenFile(dir.path)
                   }
+                  maxW={100}
+                  wordBreak={"break-word"}
                 >
-                  <Checkbox
+                  {/* <Checkbox
                     onChange={(event) =>
                       handlePathSelection(dir, event.target.checked)
                     }
-                  >
-                    {dir.isDir ? <FcFolder size={60} /> : <FcFile size={60} />}
-                    <Text>{dir.name}</Text>
-                  </Checkbox>
+                  > */}
+                  <DirIcon dir={dir} />
+                  <Text>{dir.name}</Text>
+                  {/* </Checkbox> */}
                 </Box>
               </VStack>
             </GridItem>
@@ -118,3 +133,9 @@ const App = () => {
 };
 
 export default App;
+
+const DirIcon = ({ dir }: { dir: dir.Dir }) => {
+  if (dir.isDir) return <FcFolder size={60} />;
+
+  return <FcFile size={60} />;
+};
