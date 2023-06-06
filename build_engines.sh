@@ -1,4 +1,4 @@
-CRPTIFY_DIR="lib/cryptify"
+CRPTIFY_DIR="lib/SVault-Engine"
 INSTALLER="/env/bin/pyinstaller"
 
 ${CRPTIFY_DIR}${INSTALLER} --name=ee1 --onefile ${CRPTIFY_DIR}/encrypt/encryptor.py
