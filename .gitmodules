@@ -1,3 +1,6 @@
 [submodule "lib/cryptify"]
 	path = lib/cryptify
 	url = https://github.com/Oval-Personal-Data-Wallet/cryptify/
+[submodule "lib/SVault-Engine"]
+	path = lib/SVault-Engine
+	url = https://github.com/Owbird/SVault-Engine.git/
