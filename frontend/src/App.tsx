@@ -15,6 +15,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { FcFile, FcFolder } from "react-icons/fc";
 import { dir } from "../wailsjs/go/models";
 import {
+  Encrypt,
   GetDirs,
   GetUserHome,
   OpenFile,
@@ -24,6 +25,14 @@ const App = () => {
   const [dirList, setDirList] = useState<dir.Dir[]>();
   const [paths, setPaths] = useState<string[]>([]);
   const [selectedPaths, setSelectedPaths] = useState<dir.Dir[]>([]);
+
+  const handleSelected = () => {
+    for (let dir of selectedPaths) {
+      if (!dir.isDir) {
+        Encrypt(dir.path);
+      }
+    }
+  };
 
   const getDirs = (path: string) => {
     GetDirs(path).then(setDirList);
@@ -73,7 +82,9 @@ const App = () => {
         ))}
       </HStack>
       {selectedPaths.length > 0 && (
-        <Button colorScheme="blue">Encrpyt selected</Button>
+        <Button onClick={handleSelected} colorScheme="blue">
+          Encrpyt selected
+        </Button>
       )}
 
       <CheckboxGroup>
