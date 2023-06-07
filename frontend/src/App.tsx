@@ -12,7 +12,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Fragment, useEffect, useState } from "react";
-import { DefaultExtensionType } from "react-file-icon";
 import { BiChevronRight, BiLeftArrow } from "react-icons/bi";
 import { dir } from "../wailsjs/go/models";
 import {
@@ -137,10 +136,5 @@ const App = () => {
 export default App;
 
 const DirIcon = ({ dir }: { dir: dir.Dir }) => {
-  const pathData = dir.path.split(".");
-
-  const ext = pathData[pathData.length - 1] as DefaultExtensionType;
-
-  if (dir.isDir) return <FcFolder size={60} />;
-  return <FcFile size={60} />;
+  return dir.isDir ? <FcFolder size={60} /> : <FcFile size={60} />;
 };
