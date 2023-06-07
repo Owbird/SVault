@@ -1,18 +1,13 @@
 import {
   Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Button,
   CheckboxGroup,
   Grid,
   GridItem,
-  HStack,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { Fragment, useEffect, useState } from "react";
-import { BiChevronRight, BiLeftArrow } from "react-icons/bi";
+import { useEffect, useState } from "react";
 import { dir } from "../wailsjs/go/models";
 import {
   Encrypt,
@@ -22,6 +17,7 @@ import {
 } from "../wailsjs/go/uifunctions/UIFunctions";
 
 import { FcFile, FcFolder } from "react-icons/fc";
+import SideBar from "./components/SideBar";
 
 const App = () => {
   const [dirList, setDirList] = useState<dir.Dir[]>();
@@ -39,21 +35,6 @@ const App = () => {
   const getDirs = (path: string) => {
     GetDirs(path).then(setDirList);
     setSelectedPaths([]);
-  };
-
-  const handlePathClick = (path: string) => {
-    if (paths.length > 1 && paths[paths.length - 1] !== path) {
-      const newPaths = paths.slice(0, paths.indexOf(path) + 1);
-      setPaths(newPaths);
-      getDirs(newPaths.join("/"));
-    }
-  };
-
-  const goBack = () => {
-    paths.pop();
-
-    setPaths(paths);
-    getDirs(paths.join("/"));
   };
 
   const handlePath = (path: string, dir: string) => {
@@ -74,27 +55,7 @@ const App = () => {
   }, []);
 
   return (
-    <Fragment>
-      <HStack>
-        {paths.length > 1 && <BiLeftArrow onClick={goBack} />}
-
-        <Breadcrumb separator={<BiChevronRight size={30} color="gray.500" />}>
-          {paths.map((path) => {
-            const isActive = path === paths[paths.length - 1];
-            return (
-              <BreadcrumbItem
-                color={`${isActive && "white"}`}
-                bgColor={`${isActive && "green"}`}
-                padding={`${isActive && "5px"}`}
-              >
-                <BreadcrumbLink onClick={() => handlePathClick(path)}>
-                  {path}
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            );
-          })}
-        </Breadcrumb>
-      </HStack>
+    <SideBar getDirs={getDirs} setPaths={setPaths} paths={paths}>
       {selectedPaths.length > 0 && (
         <Button onClick={handleSelected} colorScheme="blue">
           Encrpyt selected
@@ -102,7 +63,7 @@ const App = () => {
       )}
 
       <CheckboxGroup>
-        <Grid templateColumns="repeat(8, 1fr)">
+        <Grid mt={70} templateColumns="repeat(8, 1fr)">
           {dirList?.map((dir) => (
             <GridItem key={dir.path}>
               <VStack>
@@ -129,7 +90,7 @@ const App = () => {
           ))}
         </Grid>
       </CheckboxGroup>
-    </Fragment>
+    </SideBar>
   );
 };
 
