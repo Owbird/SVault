@@ -12,6 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Fragment, useEffect, useState } from "react";
+import { DefaultExtensionType } from "react-file-icon";
 import { BiChevronRight, BiLeftArrow } from "react-icons/bi";
 import { dir } from "../wailsjs/go/models";
 import {
@@ -22,6 +23,7 @@ import {
 } from "../wailsjs/go/uifunctions/UIFunctions";
 
 import { FcFile, FcFolder } from "react-icons/fc";
+
 const App = () => {
   const [dirList, setDirList] = useState<dir.Dir[]>();
   const [paths, setPaths] = useState<string[]>([]);
@@ -135,7 +137,10 @@ const App = () => {
 export default App;
 
 const DirIcon = ({ dir }: { dir: dir.Dir }) => {
-  if (dir.isDir) return <FcFolder size={60} />;
+  const pathData = dir.path.split(".");
 
+  const ext = pathData[pathData.length - 1] as DefaultExtensionType;
+
+  if (dir.isDir) return <FcFolder size={60} />;
   return <FcFile size={60} />;
 };

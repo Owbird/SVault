@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"path/filepath"
 	"runtime"
 )
 
@@ -13,7 +12,6 @@ type Dir struct {
 	Name  string `json:"name"`
 	IsDir bool   `json:"isDir"`
 	Path  string `json:"path"`
-	Type  string `json:"type"`
 }
 
 type DirFunctions struct {
@@ -78,14 +76,12 @@ func (df *DirFunctions) GetDirs(p string) []Dir {
 
 		path := path.Join(dir, file.Name())
 
-		file_type := filepath.Ext(path)
-
 		dirList = append(dirList, Dir{
 			Name:  file.Name(),
 			IsDir: file.IsDir(),
-			Type:  file_type,
 			Path:  path,
 		})
+
 	}
 
 	return dirList
