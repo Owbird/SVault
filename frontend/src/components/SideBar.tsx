@@ -15,11 +15,12 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ReactNode, ReactText } from "react";
+import { ReactNode, ReactText, useContext } from "react";
 import { IconType } from "react-icons";
 import { BiChevronRight } from "react-icons/bi";
 import { CiVault } from "react-icons/ci";
 import { FiArrowLeft, FiHome, FiMenu } from "react-icons/fi";
+import { PathContext } from "../contexts/pathsContext";
 
 interface LinkItemProps {
   name: string;
@@ -30,18 +31,12 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Vault", icon: CiVault },
 ];
 
-export default function SideBar({
-  children,
-  paths,
-  getDirs,
-  setPaths,
-}: {
-  children: ReactNode;
-  paths: string[];
-  setPaths: (paths: string[]) => void;
-  getDirs: (path: string) => void;
-}) {
+export default function SideBar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const pathData = useContext(PathContext);
+
+  const { paths, getDirs, setPaths } = pathData || {};
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <SidebarContent
