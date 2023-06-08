@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Checkbox,
   CheckboxGroup,
   Grid,
@@ -42,14 +41,6 @@ const App = () => {
     GetUserHome().then((path) => handlePath(path, path));
   }, []);
 
-  const handleSelected = () => {
-    for (let dir of selectedPaths) {
-      if (!dir.isDir) {
-        Encrypt(dir.path);
-      }
-    }
-  };
-
   const handlePathSelection = (dir: dir.Dir, isChecked: boolean) => {
     if (isChecked) {
       setSelectedPaths([...selectedPaths, dir]);
@@ -73,11 +64,6 @@ const App = () => {
     >
       <SideBar>
         <CheckboxGroup>
-          {selectedPaths.length > 0 && (
-            <Button onClick={handleSelected} colorScheme="blue">
-              Encrpyt selected
-            </Button>
-          )}
           <Grid mt={70} templateColumns="repeat(8, 1fr)">
             {dirList?.map((dir) => (
               <GridItem key={dir.path}>

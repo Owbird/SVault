@@ -4,22 +4,25 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Button,
   CloseButton,
   Flex,
   FlexProps,
   HStack,
   Icon,
-  IconButton,
   Link,
+  Stack,
   Text,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ReactNode, ReactText, useContext } from "react";
+import { ReactNode, ReactText, useContext, useState } from "react";
 import { IconType } from "react-icons";
 import { BiChevronRight } from "react-icons/bi";
 import { CiVault } from "react-icons/ci";
-import { FiArrowLeft, FiHome, FiMenu } from "react-icons/fi";
+import { FiArrowLeft, FiHome } from "react-icons/fi";
+import { dir } from "../../wailsjs/go/models";
+import { Encrypt, GetDirs } from "../../wailsjs/go/uifunctions/UIFunctions";
 import { PathContext } from "../contexts/pathsContext";
 
 interface LinkItemProps {
@@ -34,9 +37,6 @@ const LinkItems: Array<LinkItemProps> = [
 export default function SideBar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const pathData = useContext(PathContext);
-
-  const { paths, getDirs, setPaths } = pathData || {};
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <SidebarContent
@@ -45,12 +45,7 @@ export default function SideBar({ children }: { children: ReactNode }) {
       />
 
       {/* mobilenav */}
-      <MobileNav
-        setPaths={setPaths}
-        getDirs={getDirs}
-        paths={paths}
-        onOpen={onOpen}
-      />
+      <MobileNav onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>
@@ -130,11 +125,36 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
-  paths: string[];
-  setPaths: (paths: string[]) => void;
-  getDirs: (path: string) => void;
 }
-const MobileNav = ({ onOpen, paths, getDirs, setPaths }: MobileProps) => {
+const MobileNav = ({ onOpen }: MobileProps) => {
+  const pathData = useContext(PathContext);
+
+  const { selectedPaths, paths, getDirs, setPaths } = pathData || {};
+
+  const [isEncrypting, setIsEncrypting] = useState(false);
+
+  const encryptor = async (dirs: dir.Dir[]) => {
+    for (let dir of dirs) {
+      if (dir.isDir) {
+        await walkPath(dir.path);
+      } else {
+        await Encrypt(dir.path);
+      }
+    }
+  };
+
+  const walkPath = async (path: string) => {
+    await GetDirs(path).then(encryptor);
+  };
+
+  const handleSelected = async () => {
+    setIsEncrypting(true);
+
+    await encryptor(selectedPaths);
+
+    setIsEncrypting(false);
+  };
+
   const handlePathClick = (path: string) => {
     if (paths.length > 1 && paths[paths.length - 1] !== path) {
       const newPaths = paths.slice(0, paths.indexOf(path) + 1);
@@ -150,27 +170,19 @@ const MobileNav = ({ onOpen, paths, getDirs, setPaths }: MobileProps) => {
     getDirs(paths.join("/"));
   };
   return (
-    <Flex
+    <Stack
       pos={"fixed"}
       zIndex={1}
       w={"full"}
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
       height="20"
-      alignItems="center"
+      alignItems="flex-start"
       bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue("gray.200", "gray.700")}
       justifyContent={{ base: "space-between", md: "flex-start" }}
     >
-      <IconButton
-        display={{ base: "flex", md: "none" }}
-        onClick={onOpen}
-        variant="outline"
-        aria-label="open menu"
-        icon={<FiMenu />}
-      />
-
       <Text
         display={{ base: "flex", md: "none" }}
         fontSize="2xl"
@@ -200,6 +212,15 @@ const MobileNav = ({ onOpen, paths, getDirs, setPaths }: MobileProps) => {
           })}
         </Breadcrumb>
       </HStack>
-    </Flex>
+      {selectedPaths.length > 0 && (
+        <Button
+          isLoading={isEncrypting}
+          onClick={handleSelected}
+          colorScheme="blue"
+        >
+          Encrpyt selected
+        </Button>
+      )}
+    </Stack>
   );
 };
