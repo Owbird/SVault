@@ -133,24 +133,35 @@ const MobileNav = ({ onOpen }: MobileProps) => {
 
   const [isEncrypting, setIsEncrypting] = useState(false);
 
-  const encryptor = async (dirs: dir.Dir[]) => {
+  const encryptor = async (dirs: dir.Dir[], pwd: string) => {
     for (let dir of dirs) {
       if (dir.isDir) {
-        await walkPath(dir.path);
+        await walkPath(dir.path, pwd);
       } else {
-        await Encrypt(dir.path, "");
+        await Encrypt(dir.path, pwd);
       }
     }
   };
 
-  const walkPath = async (path: string) => {
-    await GetDirs(path).then(encryptor);
+  const walkPath = async (path: string, pwd: string) => {
+    await GetDirs(path).then((dirs) => encryptor(dirs, pwd));
+  };
+
+  const getPassword = (): string => {
+    const password =
+      prompt(
+        "Enter a password or leave it blank to automatically generate one."
+      ) ?? "";
+
+    return password;
   };
 
   const handleSelected = async () => {
     setIsEncrypting(true);
 
-    await encryptor(selectedPaths);
+    const password = getPassword();
+
+    await encryptor(selectedPaths, password);
 
     setIsEncrypting(false);
   };
