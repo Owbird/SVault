@@ -4,7 +4,7 @@ import {dir} from '../models';
 
 export function Decrypt():Promise<void>;
 
-export function Encrypt(arg1:string):Promise<void>;
+export function Encrypt(arg1:string,arg2:string):Promise<string>;
 
 export function GetDirs(arg1:string):Promise<Array<dir.Dir>>;
 

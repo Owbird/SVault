@@ -11,7 +11,6 @@ import {
 import { useEffect, useState } from "react";
 import { dir } from "../wailsjs/go/models";
 import {
-  Encrypt,
   GetDirs,
   GetUserHome,
   OpenFile,
@@ -32,6 +31,7 @@ const App = () => {
     });
     setSelectedPaths([]);
   };
+
   const handlePath = (path: string, dir: string) => {
     getDirs(path);
     setPaths([...paths, dir]);

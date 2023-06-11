@@ -6,8 +6,8 @@ export function Decrypt() {
   return window['go']['uifunctions']['UIFunctions']['Decrypt']();
 }
 
-export function Encrypt(arg1) {
-  return window['go']['uifunctions']['UIFunctions']['Encrypt'](arg1);
+export function Encrypt(arg1, arg2) {
+  return window['go']['uifunctions']['UIFunctions']['Encrypt'](arg1, arg2);
 }
 
 export function GetDirs(arg1) {

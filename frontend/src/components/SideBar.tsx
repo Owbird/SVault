@@ -16,7 +16,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ReactNode, ReactText, useContext, useState } from "react";
+import { ReactNode, useContext, useState } from "react";
 import { IconType } from "react-icons";
 import { BiChevronRight } from "react-icons/bi";
 import { CiVault } from "react-icons/ci";
@@ -85,7 +85,7 @@ const SidebarContent = ({ onClose }: SidebarProps) => {
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
-  children: ReactText;
+  children: ReactNode;
 }
 const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   return (
@@ -138,7 +138,7 @@ const MobileNav = ({ onOpen }: MobileProps) => {
       if (dir.isDir) {
         await walkPath(dir.path);
       } else {
-        await Encrypt(dir.path);
+        await Encrypt(dir.path, "");
       }
     }
   };
