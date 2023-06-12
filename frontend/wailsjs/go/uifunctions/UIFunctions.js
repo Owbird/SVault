@@ -6,6 +6,10 @@ export function Decrypt() {
   return window['go']['uifunctions']['UIFunctions']['Decrypt']();
 }
 
+export function DeleteFile(arg1) {
+  return window['go']['uifunctions']['UIFunctions']['DeleteFile'](arg1);
+}
+
 export function Encrypt(arg1, arg2) {
   return window['go']['uifunctions']['UIFunctions']['Encrypt'](arg1, arg2);
 }
@@ -16,6 +20,10 @@ export function GetDirs(arg1) {
 
 export function GetUserHome() {
   return window['go']['uifunctions']['UIFunctions']['GetUserHome']();
+}
+
+export function MoveToVault(arg1) {
+  return window['go']['uifunctions']['UIFunctions']['MoveToVault'](arg1);
 }
 
 export function OpenFile(arg1) {

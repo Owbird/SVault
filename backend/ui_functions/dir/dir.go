@@ -5,7 +5,9 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"runtime"
+	"strings"
 )
 
 type Dir struct {
@@ -85,4 +87,29 @@ func (df *DirFunctions) GetDirs(p string) []Dir {
 	}
 
 	return dirList
+}
+
+func (df *DirFunctions) MoveToVault(p string) {
+	user_home := df.GetUserHome()
+
+	vault_path := strings.ReplaceAll(p, user_home, "")
+
+	vault_path = path.Join(".vault", vault_path)
+
+	err := os.MkdirAll(filepath.Dir(vault_path), os.ModePerm)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	os.Rename(p, vault_path)
+
+}
+
+func (df *DirFunctions) DeleteFile(p string) {
+	err := os.Remove(filepath.Join(p))
+
+	if err != nil {
+		log.Fatalln(err)
+	}
 }

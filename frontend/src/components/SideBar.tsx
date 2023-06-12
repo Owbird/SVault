@@ -22,7 +22,12 @@ import { BiChevronRight } from "react-icons/bi";
 import { CiVault } from "react-icons/ci";
 import { FiArrowLeft, FiHome } from "react-icons/fi";
 import { dir } from "../../wailsjs/go/models";
-import { Encrypt, GetDirs } from "../../wailsjs/go/uifunctions/UIFunctions";
+import {
+  DeleteFile,
+  Encrypt,
+  GetDirs,
+  MoveToVault,
+} from "../../wailsjs/go/uifunctions/UIFunctions";
 import { PathContext } from "../contexts/pathsContext";
 
 interface LinkItemProps {
@@ -139,6 +144,13 @@ const MobileNav = ({ onOpen }: MobileProps) => {
         await walkPath(dir.path, pwd);
       } else {
         await Encrypt(dir.path, pwd);
+
+        const path_data = dir.path.split(".");
+
+        const ovl_path =
+          path_data.slice(0, path_data.length - 1).toString() + ".ovl";
+        await MoveToVault(ovl_path);
+        await DeleteFile(dir.path);
       }
     }
   };
