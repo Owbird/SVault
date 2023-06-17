@@ -175,6 +175,8 @@ const MobileNav = ({ onOpen }: MobileProps) => {
 
     await encryptor(selectedPaths, password);
 
+    getDirs(paths.slice(0, paths.length).join("/"));
+
     setIsEncrypting(false);
   };
 
