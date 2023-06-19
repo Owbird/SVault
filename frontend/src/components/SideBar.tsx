@@ -1,6 +1,5 @@
 import {
   Box,
-  BoxProps,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -14,7 +13,6 @@ import {
   Stack,
   Text,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { ReactNode, useContext, useState } from "react";
 import { IconType } from "react-icons";
@@ -28,7 +26,7 @@ import {
   GetDirs,
   MoveToVault,
 } from "../../wailsjs/go/uifunctions/UIFunctions";
-import { PathContext } from "../contexts/pathsContext";
+import { PathContext, PathData } from "../contexts/pathsContext";
 
 interface LinkItemProps {
   name: string;
@@ -40,17 +38,14 @@ const LinkItems: Array<LinkItemProps> = [
 ];
 
 export default function SideBar({ children }: { children: ReactNode }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const pathContext = useContext(PathContext);
 
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
-      <SidebarContent
-        onClose={() => onClose}
-        display={{ base: "none", md: "block" }}
-      />
+      <SidebarContent pathContext={pathContext} />
 
       {/* mobilenav */}
-      <MobileNav onOpen={onOpen} />
+      <MobileNav />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>
@@ -58,11 +53,16 @@ export default function SideBar({ children }: { children: ReactNode }) {
   );
 }
 
-interface SidebarProps extends BoxProps {
-  onClose: () => void;
-}
-
-const SidebarContent = ({ onClose }: SidebarProps) => {
+const SidebarContent = ({ pathContext }: { pathContext: PathData }) => {
+  const toggleBodyView = () => {
+    if (pathContext.currentBody === "home") {
+      pathContext.setCurrentBody("vault");
+      pathContext.getDirs(".vault");
+    } else {
+      pathContext.setCurrentBody("home");
+      pathContext.getDirs("/");
+    }
+  };
   return (
     <Box
       transition="3s ease"
@@ -77,10 +77,10 @@ const SidebarContent = ({ onClose }: SidebarProps) => {
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
           SVault
         </Text>
-        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
+        <CloseButton display={{ base: "flex", md: "none" }} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
+        <NavItem onClick={toggleBodyView} key={link.name} icon={link.icon}>
           {link.name}
         </NavItem>
       ))}
@@ -128,10 +128,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   );
 };
 
-interface MobileProps extends FlexProps {
-  onOpen: () => void;
-}
-const MobileNav = ({ onOpen }: MobileProps) => {
+const MobileNav = () => {
   const pathData = useContext(PathContext);
 
   const { selectedPaths, paths, getDirs, setPaths } = pathData || {};

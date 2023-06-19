@@ -22,6 +22,7 @@ import { PathContext } from "./contexts/pathsContext";
 
 const App = () => {
   const [dirList, setDirList] = useState<dir.Dir[]>([]);
+  const [currentBody, setCurrentBody] = useState("home");
   const [paths, setPaths] = useState<string[]>([]);
   const [selectedPaths, setSelectedPaths] = useState<dir.Dir[]>([]);
 
@@ -54,6 +55,8 @@ const App = () => {
       value={{
         dirList,
         setDirList,
+        currentBody,
+        setCurrentBody,
         paths,
         setPaths,
         selectedPaths,
