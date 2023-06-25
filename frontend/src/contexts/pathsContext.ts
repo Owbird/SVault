@@ -18,7 +18,7 @@ export const PathContext = createContext<PathData>({
   dirList: [],
   paths: [],
   selectedPaths: [],
-  currentBody: "home",
+  currentBody: "Home",
   setDirList: () => {},
   setPaths: () => {},
   setSelectedPaths: () => {},

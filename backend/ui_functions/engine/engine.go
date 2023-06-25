@@ -20,4 +20,14 @@ func (ef *EngineFunctions) Encrypt(path string, pwd string) string {
 
 }
 
-func (ef *EngineFunctions) Decrypt() {}
+func (ef *EngineFunctions) Decrypt(path string, pwd string) string {
+	res, err := exec.Command("./build/bin/ee2", path, pwd).CombinedOutput()
+
+	log.Println(path, pwd)
+
+	if err != nil {
+		log.Println("Decrypt err ==> ", err)
+	}
+
+	return string(res)
+}

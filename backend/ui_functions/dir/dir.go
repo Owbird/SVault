@@ -89,7 +89,7 @@ func (df *DirFunctions) GetDirs(p string) []Dir {
 	return dirList
 }
 
-func (df *DirFunctions) MoveToVault(p string) {
+func (df *DirFunctions) MoveToVault(p string) error {
 	user_home := df.GetUserHome()
 
 	vault_path := strings.ReplaceAll(p, user_home, "")
@@ -102,7 +102,16 @@ func (df *DirFunctions) MoveToVault(p string) {
 		log.Println(err)
 	}
 
-	os.Rename(p, vault_path)
+	return os.Rename(p, vault_path)
+
+}
+
+func (df *DirFunctions) MoveFromVault(p string) error {
+	user_home := df.GetUserHome()
+
+	norm_path := strings.ReplaceAll(p, ".vault", user_home)
+
+	return os.Rename(p, norm_path)
 
 }
 

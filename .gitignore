@@ -1,8 +1,6 @@
 build/
-dist/
 node_modules
 frontend/dist
 *.deb
-*.spec
-*.ovl
 .vault/
+*.spec

@@ -22,7 +22,7 @@ import { PathContext } from "./contexts/pathsContext";
 
 const App = () => {
   const [dirList, setDirList] = useState<dir.Dir[]>([]);
-  const [currentBody, setCurrentBody] = useState("home");
+  const [currentBody, setCurrentBody] = useState("Home");
   const [paths, setPaths] = useState<string[]>([]);
   const [selectedPaths, setSelectedPaths] = useState<dir.Dir[]>([]);
 

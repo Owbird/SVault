@@ -21,9 +21,12 @@ import { CiVault } from "react-icons/ci";
 import { FiArrowLeft, FiHome } from "react-icons/fi";
 import { dir } from "../../wailsjs/go/models";
 import {
+  Decrypt,
   DeleteFile,
   Encrypt,
   GetDirs,
+  GetUserHome,
+  MoveFromVault,
   MoveToVault,
 } from "../../wailsjs/go/uifunctions/UIFunctions";
 import { PathContext, PathData } from "../contexts/pathsContext";
@@ -54,13 +57,14 @@ export default function SideBar({ children }: { children: ReactNode }) {
 }
 
 const SidebarContent = ({ pathContext }: { pathContext: PathData }) => {
-  const toggleBodyView = () => {
-    if (pathContext.currentBody === "home") {
-      pathContext.setCurrentBody("vault");
-      pathContext.getDirs(".vault");
-    } else {
-      pathContext.setCurrentBody("home");
+  const toggleBodyView = async (link: string) => {
+    pathContext.setCurrentBody(link);
+    if (link.toLocaleLowerCase() === "home") {
       pathContext.getDirs("/");
+      pathContext.setPaths([await GetUserHome()]);
+    } else {
+      pathContext.getDirs(".vault");
+      pathContext.setPaths([".vault"]);
     }
   };
   return (
@@ -80,7 +84,11 @@ const SidebarContent = ({ pathContext }: { pathContext: PathData }) => {
         <CloseButton display={{ base: "flex", md: "none" }} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem onClick={toggleBodyView} key={link.name} icon={link.icon}>
+        <NavItem
+          onClick={() => toggleBodyView(link.name)}
+          key={link.name}
+          icon={link.icon}
+        >
           {link.name}
         </NavItem>
       ))}
@@ -152,15 +160,34 @@ const MobileNav = () => {
     }
   };
 
-  const walkPath = async (path: string, pwd: string) => {
-    await GetDirs(path).then((dirs) => encryptor(dirs, pwd));
+  const decryptor = async (dirs: dir.Dir[], pwd: string) => {
+    for (let dir of dirs) {
+      if (dir.isDir) {
+        await walkPath(dir.path, pwd);
+      } else {
+        const res = await Decrypt(dir.path, pwd);
+
+        if (res === "Incorrect password") {
+          return alert("Incorrect password");
+        }
+        await MoveFromVault(res);
+        await DeleteFile(dir.path);
+      }
+    }
   };
 
-  const getPassword = (): string => {
-    const password =
-      prompt(
-        "Enter a password or leave it blank to automatically generate one."
-      ) ?? "";
+  const walkPath = async (path: string, pwd: string) => {
+    await GetDirs(path).then((dirs) =>
+      pathData.currentBody === "Home"
+        ? encryptor(dirs, pwd)
+        : decryptor(dirs, pwd)
+    );
+  };
+
+  const getPassword = (): string | null => {
+    const password = prompt(
+      "Enter a password or leave it blank to automatically generate one."
+    );
 
     return password;
   };
@@ -170,7 +197,13 @@ const MobileNav = () => {
 
     const password = getPassword();
 
-    await encryptor(selectedPaths, password);
+    if (password) {
+      if (pathData.currentBody == "Home") {
+        await encryptor(selectedPaths, password);
+      } else {
+        await decryptor(selectedPaths, password);
+      }
+    }
 
     getDirs(paths.slice(0, paths.length).join("/"));
 
@@ -240,7 +273,7 @@ const MobileNav = () => {
           onClick={handleSelected}
           colorScheme="blue"
         >
-          Encrpyt selected
+          {pathData.currentBody === "Home" ? "Encrypt" : "Decrypt"} selected
         </Button>
       )}
     </Stack>
