@@ -16,8 +16,8 @@ The project is a desktop application that provides users with the ability to enc
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/<username>/<repository>.git`
-2. Install Go Wails: Follow the installation instructions for Go Wails from the [official documentation](https://wails.app/gettingstarted/).
+1. Clone the repository: `git clone https://github.com/owbird/SVault.git`
+2. Install Go Wails: Follow the installation instructions for Go Wails from the [official documentation](https://wails.io/docs/gettingstarted/installation).
 3. Install project dependencies: `go get ./...`
 4. Build the application: `wails build`
 5. Run the application: `./build/<application-name>`
