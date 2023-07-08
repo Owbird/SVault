@@ -12,15 +12,13 @@ The project is a desktop application that provides users with the ability to enc
 ## Technologies Used
 
 - Go Wails: The project is built using Go Wails, which allows for creating desktop applications with Go and web technologies.
-- Cryptify Crypto Engine: A forked version of the cryptify library is integrated to provide file encryption and decryption capabilities.
+- [Oval-Personal-Data-Wallet/cryptify](https://github.com/Oval-Personal-Data-Wallet/cryptify): A forked version of the cryptify is integrated to provide file encryption and decryption capabilities.
 
 ## Installation
 
 1. Clone the repository: `git clone https://github.com/owbird/SVault.git`
 2. Install Go Wails: Follow the installation instructions for Go Wails from the [official documentation](https://wails.io/docs/gettingstarted/installation).
-3. Install project dependencies: `go get ./...`
-4. Build the application: `make compile`
-5. Run the application from `build/bin/<platform>`
+3. Run the application from `wails dev`
 
 ## Contributing
 
@@ -32,4 +30,4 @@ Contributions to the project are welcome! If you encounter any issues or have su
 
 ## Acknowledgments
 
-The project builds upon the work of the [cryptify](https://github.com/Oval-Personal-Data-Wallet/cryptify) crypto engine developed by the Oval Personal Data Wallet team. We acknowledge and appreciate their contributions.
+The project builds upon the work of the [cryptify](https://github.com/Oval-Personal-Data-Wallet/cryptify) developed by the Oval Personal Data Wallet team. We acknowledge and appreciate their contributions.
