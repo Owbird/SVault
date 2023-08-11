@@ -44,22 +44,28 @@ const App = () => {
 
   const handlePathSelection = (dir: dir.Dir, isChecked: boolean) => {
     if (isChecked) {
-      setSelectedPaths([...selectedPaths, dir]);
+      setSelectedPaths((currentPaths) => [...currentPaths, dir]);
     } else {
-      setSelectedPaths(selectedPaths.filter((d) => d.path !== dir.path));
+      setSelectedPaths((currentPaths) =>
+        currentPaths.filter((d) => d.path !== dir.path),
+      );
     }
+  };
+
+  const handleDoubleClick = (dir: dir.Dir) => {
+    dir.isDir ? handlePath(dir.path, dir.name) : OpenFile(dir.path);
   };
 
   return (
     <PathContext.Provider
       value={{
         dirList,
-        setDirList,
         currentBody,
-        setCurrentBody,
         paths,
-        setPaths,
         selectedPaths,
+        setDirList,
+        setCurrentBody,
+        setPaths,
         setSelectedPaths,
         handlePath,
         getDirs,
@@ -72,11 +78,7 @@ const App = () => {
               <GridItem key={dir.path}>
                 <VStack>
                   <Box
-                    onDoubleClick={() =>
-                      dir.isDir
-                        ? handlePath(dir.path, dir.name)
-                        : OpenFile(dir.path)
-                    }
+                    onDoubleClick={() => handleDoubleClick(dir)}
                     maxW={100}
                     wordBreak={"break-word"}
                   >
