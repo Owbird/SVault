@@ -3,11 +3,8 @@ package main
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"github.com/owbird/svault/internal/ui"
 )
-
-var menus = []*fyne.Menu{
-	fyne.NewMenu("Vaults", fyne.NewMenuItem("New", func() {})),
-}
 
 func main() {
 	a := app.New()
@@ -15,6 +12,12 @@ func main() {
 	w := a.NewWindow("SVault")
 
 	w.Resize(fyne.NewSize(500, 500))
+
+	uf := ui.NewUIFunctions(w)
+
+	menus := []*fyne.Menu{
+		fyne.NewMenu("Vaults", fyne.NewMenuItem("New Vault", uf.CreateVault)),
+	}
 
 	w.SetMainMenu(fyne.NewMainMenu(menus...))
 

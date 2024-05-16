@@ -119,3 +119,6 @@ func (vf *VaultFunctions) DeleteFile(p string) {
 		log.Fatalln(err)
 	}
 }
+
+func (vf *VaultFunctions) CreateVault(name, pwd string) {
+}
