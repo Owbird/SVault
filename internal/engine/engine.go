@@ -5,19 +5,19 @@ import (
 	"os/exec"
 )
 
-type EngineFunctions struct {
+type EngineFunctions struct{}
+
+func NewEngineFunctions() *EngineFunctions {
+	return &EngineFunctions{}
 }
 
 func (ef *EngineFunctions) Encrypt(path string, pwd string) string {
-
 	res, err := exec.Command("./build/bin/ee1", path, pwd).CombinedOutput()
-
 	if err != nil {
 		log.Println("Encrypt err ==> ", err)
 	}
 
 	return string(res)
-
 }
 
 func (ef *EngineFunctions) Decrypt(path string, pwd string) string {

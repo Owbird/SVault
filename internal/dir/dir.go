@@ -16,12 +16,14 @@ type Dir struct {
 	Path  string `json:"path"`
 }
 
-type DirFunctions struct {
+type DirFunctions struct{}
+
+func NewDirFunctions() *DirFunctions {
+	return &DirFunctions{}
 }
 
 func (df *DirFunctions) GetUserHome() string {
 	home_dir, err := os.UserHomeDir()
-
 	if err != nil {
 		log.Println(err)
 	}
@@ -61,15 +63,12 @@ func (df *DirFunctions) GetDirs(p string) []Dir {
 	dirList := []Dir{}
 
 	if p == "/" {
-
 		dir = df.GetUserHome()
-
 	} else {
 		dir = p
 	}
 
 	files, err := os.ReadDir(dir)
-
 	if err != nil {
 		log.Println(err)
 	}
@@ -97,13 +96,11 @@ func (df *DirFunctions) MoveToVault(p string) error {
 	vault_path = path.Join(".vault", vault_path)
 
 	err := os.MkdirAll(filepath.Dir(vault_path), os.ModePerm)
-
 	if err != nil {
 		log.Println(err)
 	}
 
 	return os.Rename(p, vault_path)
-
 }
 
 func (df *DirFunctions) MoveFromVault(p string) error {
@@ -112,12 +109,10 @@ func (df *DirFunctions) MoveFromVault(p string) error {
 	norm_path := strings.ReplaceAll(p, ".vault", user_home)
 
 	return os.Rename(p, norm_path)
-
 }
 
 func (df *DirFunctions) DeleteFile(p string) {
 	err := os.Remove(filepath.Join(p))
-
 	if err != nil {
 		log.Fatalln(err)
 	}
