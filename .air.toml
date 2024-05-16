@@ -1,0 +1,7 @@
+# air.toml
+
+[build]
+  kill_delay="0s"
+  delay = 1000
+  main = "cmd/main.go"
+  cmd = "go run cmd/main.go"
