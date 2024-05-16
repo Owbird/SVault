@@ -4,3 +4,4 @@ frontend/dist
 *.deb
 .vault/
 *.spec
+/tmp
