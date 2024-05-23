@@ -5,3 +5,4 @@ frontend/dist
 .vault/
 *.spec
 /tmp
+.svault
