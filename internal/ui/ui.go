@@ -21,6 +21,7 @@ func NewUIFunctions(window fyne.Window) *UIFunctions {
 }
 
 func (uf *UIFunctions) CreateVault() {
+
 	vaultNameInput := widget.NewEntry()
 	vaultNameInput.SetPlaceHolder("Enter name")
 	vaultNameInput.Validator = validation.NewRegexp("\\S+", "Field is required")
@@ -38,8 +39,13 @@ func (uf *UIFunctions) CreateVault() {
 	}
 
 	callback := func(create bool) {
+
 		if create {
-			uf.Vault.CreateVault(vaultNameInput.Text, vaultPwdInput.Text)
+			err := uf.Vault.CreateVault(vaultNameInput.Text, vaultPwdInput.Text)
+
+			if err != nil {
+				dialog.NewError(err, uf.Window).Show()
+			}
 		}
 	}
 
