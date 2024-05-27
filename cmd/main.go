@@ -21,6 +21,8 @@ func main() {
 
 	w.SetMainMenu(fyne.NewMainMenu(menus...))
 
+	w.SetContent(uf.Home())
+
 	w.Show()
 
 	a.Run()

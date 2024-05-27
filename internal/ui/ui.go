@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/validation"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
@@ -18,6 +19,30 @@ func NewUIFunctions(window fyne.Window) *UIFunctions {
 		Vault:  vault.NewVaultFunctions(),
 		Window: window,
 	}
+}
+
+func (uf *UIFunctions) Home() fyne.CanvasObject {
+
+	vaults, err := uf.Vault.ListVaults()
+	if err != nil {
+		dialog.NewError(err, uf.Window).Show()
+	}
+
+	if len(vaults) == 0 {
+
+		return container.NewCenter(widget.NewRichTextWithText("No vaults yet"))
+
+	}
+
+	cards := []fyne.CanvasObject{}
+
+	for _, vault := range vaults {
+		card := container.NewCenter(widget.NewRichTextWithText(vault.Name))
+		cards = append(cards, card)
+
+	}
+
+	return container.NewGridWithColumns(4, cards...)
 }
 
 func (uf *UIFunctions) CreateVault() {

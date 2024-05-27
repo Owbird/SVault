@@ -1,6 +1,7 @@
 package vault
 
 import (
+	"github.com/Owbird/SVault-Engine/pkg/models"
 	"github.com/Owbird/SVault-Engine/pkg/vault"
 )
 
@@ -12,20 +13,28 @@ type Dir struct {
 	Path    string `json:"path"`
 }
 
-type VaultFunctions struct{}
-
-var v = vault.NewVault()
+type VaultFunctions struct {
+	vault *vault.Vault
+}
 
 func NewVaultFunctions() *VaultFunctions {
-	return &VaultFunctions{}
+	return &VaultFunctions{
+		vault: vault.NewVault(),
+	}
 }
 
 func (vf *VaultFunctions) CreateVault(name, pwd string) error {
-	err := v.Create(name, pwd)
+	err := vf.vault.Create(name, pwd)
 
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (vf *VaultFunctions) ListVaults() ([]models.Vault, error) {
+
+	return vf.vault.List()
+
 }
