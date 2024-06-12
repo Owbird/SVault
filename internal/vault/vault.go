@@ -25,7 +25,6 @@ func NewVaultFunctions() *VaultFunctions {
 
 func (vf *VaultFunctions) CreateVault(name, pwd string) error {
 	err := vf.vault.Create(name, pwd)
-
 	if err != nil {
 		return err
 	}
@@ -34,7 +33,13 @@ func (vf *VaultFunctions) CreateVault(name, pwd string) error {
 }
 
 func (vf *VaultFunctions) ListVaults() ([]models.Vault, error) {
-
 	return vf.vault.List()
+}
 
+func (vf *VaultFunctions) GetVault(vault, password string) ([]models.File, error) {
+	return vf.vault.ListFileVaults(vault, password)
+}
+
+func (vf *VaultFunctions) AddFile(file, vault, password string) error {
+	return vf.vault.Add(file, vault, password)
 }
