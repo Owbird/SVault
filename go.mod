@@ -9,7 +9,7 @@ require fyne.io/fyne/v2 v2.4.5
 require (
 	dario.cat/mergo v1.0.0 // indirect
 	fyne.io/systray v1.10.1-0.20231115130155-104f5ef7839e // indirect
-	github.com/Owbird/SVault-Engine v0.0.0-20240523151900-8b086f8501b6 // indirect
+	github.com/Owbird/SVault-Engine v0.0.0-20240614141815-c1caa94848a9 // indirect
 	github.com/bep/godartsass v1.2.0 // indirect
 	github.com/bep/godartsass/v2 v2.0.0 // indirect
 	github.com/bep/golibsass v1.1.1 // indirect
@@ -43,16 +43,20 @@ require (
 	github.com/google/flatbuffers v1.12.1 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/jedib0t/go-pretty/v6 v6.5.9 // indirect
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
 	github.com/klauspost/compress v1.12.3 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mitchellh/hashstructure v1.1.0 // indirect
 	github.com/ostafen/clover v1.2.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/rs/cors v1.11.0 // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
@@ -63,6 +67,7 @@ require (
 	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/tdewolff/parse/v2 v2.7.14 // indirect
 	github.com/tevino/abool v1.2.0 // indirect
+	github.com/winfsp/cgofuse v1.5.0 // indirect
 	github.com/yuin/goldmark v1.7.1 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/image v0.16.0 // indirect
