@@ -36,6 +36,18 @@ func (uf *UIFunctions) ViewVault(vault string) {
 
 	callback := func(proceed bool) {
 		if proceed {
+
+			pwdMatch, err := uf.Vault.AuthVault(vault, vaultPwdInput.Text)
+			if err != nil {
+				dialog.NewError(err, uf.Window).Show()
+				return
+			}
+
+			if !pwdMatch {
+				dialog.NewError(fmt.Errorf("Passwords do not match"), uf.Window).Show()
+				return
+			}
+
 			vaultWindow := fyne.CurrentApp().NewWindow(fmt.Sprintf("%v vault", vault))
 
 			menus := []*fyne.Menu{
