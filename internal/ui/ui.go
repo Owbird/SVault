@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -61,6 +62,25 @@ func (uf *UIFunctions) ViewVault(vault string) {
 					}, vaultWindow)
 				})),
 			}
+
+			files, err := uf.Vault.GetVault(vault, vaultPwdInput.Text)
+			if err != nil {
+				dialog.NewError(err, uf.Window).Show()
+				return
+			}
+
+			fileCards := []fyne.CanvasObject{}
+
+			for _, file := range files {
+				fileCards = append(fileCards, widget.NewCard(
+					filepath.Base(file.Name),
+					file.ModTime.Format("2nd January, 2006"),
+					container.NewStack(),
+				),
+				)
+			}
+
+			vaultWindow.SetContent(container.NewHBox(fileCards...))
 
 			vaultWindow.SetMainMenu(fyne.NewMainMenu(menus...))
 
