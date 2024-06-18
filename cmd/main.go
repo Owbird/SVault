@@ -13,15 +13,15 @@ func main() {
 
 	w.Resize(fyne.NewSize(500, 500))
 
-	uf := ui.NewUIFunctions(w)
+	hui := ui.NewHomeUI(w)
 
 	menus := []*fyne.Menu{
-		fyne.NewMenu("Vaults", fyne.NewMenuItem("New Vault", uf.CreateVault)),
+		fyne.NewMenu("Vaults", fyne.NewMenuItem("New Vault", hui.CreateVault)),
 	}
 
 	w.SetMainMenu(fyne.NewMainMenu(menus...))
 
-	w.SetContent(uf.Home())
+	w.SetContent(hui.Home())
 
 	w.Show()
 
