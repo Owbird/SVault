@@ -50,6 +50,8 @@ github.com/Owbird/SVault-Engine v0.0.0-20240523151900-8b086f8501b6 h1:uzX+1mv4IL
 github.com/Owbird/SVault-Engine v0.0.0-20240523151900-8b086f8501b6/go.mod h1:6GfnDvSQPDS/hmhY5dIVFEeSb1l/rXJUT4UYHL0Hx3E=
 github.com/Owbird/SVault-Engine v0.0.0-20240614141815-c1caa94848a9 h1:icCiV+a/ot1HaCx4A1clGfL1ECiUfPh5CSaEFrKfuC8=
 github.com/Owbird/SVault-Engine v0.0.0-20240614141815-c1caa94848a9/go.mod h1:SeoYHSNbJl7ODNxpTegBsudz/g6F57IvUqsvaCO0a/Y=
+github.com/Owbird/SVault-Engine v0.0.0-20240617123055-baf77fd51149 h1:pMgsecS4Q36CfmM9QgmI/iOrrwQUy/wbfgUI471Zi5s=
+github.com/Owbird/SVault-Engine v0.0.0-20240617123055-baf77fd51149/go.mod h1:SeoYHSNbJl7ODNxpTegBsudz/g6F57IvUqsvaCO0a/Y=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
 github.com/armon/circbuf v0.0.0-20150827004946-bbbad097214e/go.mod h1:3U/XgcO3hCbHZ8TKRvWD2dDTCfh9M9ya+I9JpbB7O8o=
 github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6/go.mod h1:grANhF5doyWs3UAsr3K4I6qtAmlQcZDesFNEHPZAzj8=
