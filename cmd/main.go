@@ -14,9 +14,11 @@ func main() {
 	w.Resize(fyne.NewSize(500, 500))
 
 	hui := ui.NewHomeUI(w)
+	sui := ui.NewServerUI(w)
 
 	menus := []*fyne.Menu{
 		fyne.NewMenu("Vaults", fyne.NewMenuItem("New Vault", hui.CreateVault)),
+		fyne.NewMenu("File Server", fyne.NewMenuItem("Host", sui.ChooseHostDir)),
 	}
 
 	w.SetMainMenu(fyne.NewMainMenu(menus...))
