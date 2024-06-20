@@ -9,7 +9,7 @@ require fyne.io/fyne/v2 v2.4.5
 require (
 	dario.cat/mergo v1.0.0 // indirect
 	fyne.io/systray v1.10.1-0.20231115130155-104f5ef7839e // indirect
-	github.com/Owbird/SVault-Engine v0.0.0-20240617123055-baf77fd51149 // indirect
+	github.com/Owbird/SVault-Engine v0.0.0-20240620204328-fa02329a0610 // indirect
 	github.com/bep/godartsass v1.2.0 // indirect
 	github.com/bep/godartsass/v2 v2.0.0 // indirect
 	github.com/bep/golibsass v1.1.1 // indirect
