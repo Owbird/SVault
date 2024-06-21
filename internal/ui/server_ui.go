@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/owbird/svault/internal/server"
+	"github.com/skratchdot/open-golang/open"
 )
 
 type ServerUI struct {
@@ -53,6 +54,9 @@ func (sui *ServerUI) ChooseHostDir() {
 				case "serve_web_ui_remote":
 					logsContainer.Add(
 						widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] Remote Web Running: %v", l.Message)}))
+
+					open.Run(l.Message)
+					open.Run("https://loca.lt/mytunnelpassword")
 
 				}
 
