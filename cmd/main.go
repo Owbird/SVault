@@ -4,6 +4,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"github.com/owbird/svault/internal/ui"
+	"github.com/owbird/svault/internal/vfs"
 )
 
 func main() {
@@ -16,9 +17,12 @@ func main() {
 	hui := ui.NewHomeUI(w)
 	sui := ui.NewServerUI(w)
 
+	vfs := vfs.NewVFSFunctions()
+
 	menus := []*fyne.Menu{
 		fyne.NewMenu("Vaults", fyne.NewMenuItem("New Vault", hui.CreateVault)),
-		fyne.NewMenu("File Server", fyne.NewMenuItem("Host", sui.ChooseHostDir)),
+		fyne.NewMenu("Files Server", fyne.NewMenuItem("Host", sui.ChooseHostDir)),
+		fyne.NewMenu("VFS", fyne.NewMenuItem("Mount", vfs.Mount)),
 	}
 
 	w.SetMainMenu(fyne.NewMainMenu(menus...))
