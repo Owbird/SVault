@@ -63,7 +63,7 @@ func (hui *HomeUI) ViewVault(vault string) {
 				for _, file := range files {
 					fileCards = append(fileCards, widget.NewCard(
 						filepath.Base(file.Name),
-						file.ModTime.Format("2nd January, 2006"),
+						file.ModTime.Format("January 2, 2006"),
 						container.NewStack(),
 					),
 					)
