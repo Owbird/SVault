@@ -51,6 +51,27 @@ func (hui *HomeUI) ViewVault(vault string) {
 
 			vaultWindow := fyne.CurrentApp().NewWindow(fmt.Sprintf("%v vault", vault))
 
+			updateContentUI := func() {
+				fileCards := []fyne.CanvasObject{}
+
+				files, err := hui.Vault.GetVault(vault, vaultPwdInput.Text)
+				if err != nil {
+					dialog.NewError(err, hui.Window).Show()
+					return
+				}
+
+				for _, file := range files {
+					fileCards = append(fileCards, widget.NewCard(
+						filepath.Base(file.Name),
+						file.ModTime.Format("2nd January, 2006"),
+						container.NewStack(),
+					),
+					)
+				}
+
+				vaultWindow.SetContent(container.NewHBox(fileCards...))
+			}
+
 			menus := []*fyne.Menu{
 				fyne.NewMenu("File", fyne.NewMenuItem("Add file", func() {
 					dialog.ShowFileOpen(func(uc fyne.URIReadCloser, err error) {
@@ -59,30 +80,15 @@ func (hui *HomeUI) ViewVault(vault string) {
 						}
 
 						hui.Vault.AddFile(uc.URI().Path(), vault, vaultPwdInput.Text)
+
+						updateContentUI()
 					}, vaultWindow)
 				})),
 			}
 
-			files, err := hui.Vault.GetVault(vault, vaultPwdInput.Text)
-			if err != nil {
-				dialog.NewError(err, hui.Window).Show()
-				return
-			}
-
-			fileCards := []fyne.CanvasObject{}
-
-			for _, file := range files {
-				fileCards = append(fileCards, widget.NewCard(
-					filepath.Base(file.Name),
-					file.ModTime.Format("2nd January, 2006"),
-					container.NewStack(),
-				),
-				)
-			}
-
-			vaultWindow.SetContent(container.NewHBox(fileCards...))
-
 			vaultWindow.SetMainMenu(fyne.NewMainMenu(menus...))
+
+			updateContentUI()
 
 			vaultWindow.Resize(fyne.NewSize(500, 500))
 			vaultWindow.Show()
@@ -147,6 +153,8 @@ func (hui *HomeUI) CreateVault() {
 			if err != nil {
 				dialog.NewError(err, hui.Window).Show()
 			}
+
+			hui.Window.SetContent(hui.Home())
 		}
 	}
 
