@@ -79,8 +79,9 @@ func (hui *HomeUI) ViewVault(vault string) {
 							dialog.NewError(err, vaultWindow).Show()
 						}
 
-						hui.Vault.AddFile(uc.URI().Path(), vault, vaultPwdInput.Text)
-
+						if uc != nil {
+							hui.Vault.AddFile(uc.URI().Path(), vault, vaultPwdInput.Text)
+						}
 						updateContentUI()
 					}, vaultWindow)
 				})),
