@@ -44,13 +44,54 @@ func (sui *ServerUI) ChooseHostDir() {
 			for l := range sf.LogCh {
 				switch l.Type {
 				case "api_log":
-					logsContainer.Add(
-						widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] API Log: %v", l.Message)}))
+					if l.Error != nil {
+						logsContainer.Add(
+							widget.NewRichText(
+								&widget.TextSegment{
+									Text: fmt.Sprintf("[!] API Error: %v", l.Error),
+									Style: widget.RichTextStyle{
+										ColorName: "red",
+									},
+								},
+							),
+						)
+					} else {
+						logsContainer.Add(
+							widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] API Log: %v", l.Message)}))
+					}
 
+				case "web_ui_build":
+					if l.Error != nil {
+						logsContainer.Add(
+							widget.NewRichText(
+								&widget.TextSegment{
+									Text: fmt.Sprintf("[!] Web Build Error: %v", l.Error),
+									Style: widget.RichTextStyle{
+										ColorName: "red",
+									},
+								},
+							),
+						)
+					} else {
+						logsContainer.Add(
+							widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] Web Build Running: %v", l.Message)}))
+					}
 				case "serve_web_ui_local":
-					logsContainer.Add(
-						widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] Local Web Running: %v", l.Message)}))
-
+					if l.Error != nil {
+						logsContainer.Add(
+							widget.NewRichText(
+								&widget.TextSegment{
+									Text: fmt.Sprintf("[!] Local Web Error: %v", l.Error),
+									Style: widget.RichTextStyle{
+										ColorName: "red",
+									},
+								},
+							),
+						)
+					} else {
+						logsContainer.Add(
+							widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] Local Web Running: %v", l.Message)}))
+					}
 				case "serve_web_ui_remote":
 					logsContainer.Add(
 						widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] Remote Web Running: %v", l.Message)}))
