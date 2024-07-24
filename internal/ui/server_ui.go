@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	"github.com/Owbird/SVault-Engine/pkg/config"
 	"github.com/owbird/svault/internal/server"
 	"github.com/skratchdot/open-golang/open"
 )
@@ -105,4 +106,41 @@ func (sui *ServerUI) ChooseHostDir() {
 			}
 		}()
 	}, sui.Window)
+}
+
+func (sui *ServerUI) ServerSettings() {
+
+	settingsWindow := fyne.CurrentApp().NewWindow("Server settings")
+	settingsWindow.Resize(fyne.NewSize(500, 500))
+
+	appConfig := config.NewAppConfig()
+
+	serverConfig := appConfig.GetSeverConfig()
+
+	serverNameInput := widget.NewEntry()
+	serverNameInput.SetPlaceHolder("Enter name")
+
+	allowUploadsChecker := widget.NewCheck("Allow uploads", func(value bool) {
+		serverConfig.SetAllowUploads(value)
+	})
+
+	serverNameInput.Text = serverConfig.Name
+	allowUploadsChecker.Checked = serverConfig.AllowUploads
+
+	saveBtn := widget.NewButton("Save", func() {
+
+		serverConfig.SetName(serverNameInput.Text)
+
+		appConfig.Save()
+
+		settingsWindow.Close()
+
+	})
+
+	layoutContainer := container.NewVBox(serverNameInput, allowUploadsChecker, saveBtn)
+
+	settingsWindow.SetContent(layoutContainer)
+
+	settingsWindow.Show()
+
 }
