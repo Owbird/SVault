@@ -10,6 +10,10 @@ require (
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
 )
 
+replace (
+	github.com/Owbird/SVault-Engine => ./engine
+)
+
 require (
 	fyne.io/systray v1.10.1-0.20231115130155-104f5ef7839e // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
