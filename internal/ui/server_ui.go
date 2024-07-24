@@ -124,8 +124,8 @@ func (sui *ServerUI) ServerSettings() {
 		serverConfig.SetAllowUploads(value)
 	})
 
-	serverNameInput.Text = serverConfig.Name
-	allowUploadsChecker.Checked = serverConfig.AllowUploads
+	serverNameInput.Text = serverConfig.GetName()
+	allowUploadsChecker.Checked = serverConfig.GetAllowUploads()
 
 	saveBtn := widget.NewButton("Save", func() {
 
