@@ -100,16 +100,28 @@ func (sui *ServerUI) ChooseHostDir() {
 					open.Run(l.Message)
 					open.Run("https://loca.lt/mytunnelpassword")
 
-				}
+				default:
+					if l.Error != nil {
+						logsContainer.Add(
+							widget.NewRichText(
+								&widget.TextSegment{
+									Text: fmt.Sprintf("[!] Error: %v", l.Error),
+								},
+							),
+						)
+					} else {
+						logsContainer.Add(
+							widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] Log: %v", l.Message)}))
+					}
 
-				logsContainer.Refresh()
+				}
 			}
+			logsContainer.Refresh()
 		}()
 	}, sui.Window)
 }
 
 func (sui *ServerUI) ServerSettings() {
-
 	settingsWindow := fyne.CurrentApp().NewWindow("Server settings")
 	settingsWindow.Resize(fyne.NewSize(500, 500))
 
@@ -128,13 +140,11 @@ func (sui *ServerUI) ServerSettings() {
 	allowUploadsChecker.Checked = serverConfig.GetAllowUploads()
 
 	saveBtn := widget.NewButton("Save", func() {
-
 		serverConfig.SetName(serverNameInput.Text)
 
 		appConfig.Save()
 
 		settingsWindow.Close()
-
 	})
 
 	layoutContainer := container.NewVBox(serverNameInput, allowUploadsChecker, saveBtn)
@@ -142,5 +152,4 @@ func (sui *ServerUI) ServerSettings() {
 	settingsWindow.SetContent(layoutContainer)
 
 	settingsWindow.Show()
-
 }
