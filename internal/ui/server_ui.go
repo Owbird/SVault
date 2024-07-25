@@ -37,7 +37,7 @@ func (sui *ServerUI) ChooseHostDir() {
 
 		logsContainer := container.NewVBox()
 
-		logWindow.SetContent(logsContainer)
+		logWindow.SetContent(container.NewVScroll(logsContainer))
 
 		logWindow.Show()
 
