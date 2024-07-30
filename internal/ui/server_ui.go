@@ -8,18 +8,46 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/Owbird/SVault-Engine/pkg/config"
+	"github.com/Owbird/SVault-Engine/pkg/models"
 	"github.com/owbird/svault/internal/server"
 	"github.com/skratchdot/open-golang/open"
 )
 
 type ServerUI struct {
-	Window fyne.Window
+	Window    fyne.Window
+	Functions *server.ServerFunctions
 }
 
 func NewServerUI(window fyne.Window) *ServerUI {
 	return &ServerUI{
-		Window: window,
+		Window:    window,
+		Functions: server.NewServerFunctions(),
 	}
+}
+
+func (sui *ServerUI) ShareFile() {
+	dialog.ShowFileOpen(func(uc fyne.URIReadCloser, err error) {
+		if err != nil {
+			dialog.NewError(err, sui.Window)
+			return
+		}
+
+		file := uc.URI().Path()
+
+		sui.Functions.Share(file, server.ShareCallBacks{
+			OnFileSent: func() {
+				dialog.NewInformation("File sent", "File sent successfully", sui.Window).Show()
+			},
+			OnSendErr: func(err error) {
+				dialog.NewError(err, sui.Window).Show()
+			},
+			OnProgressChange: func(progress models.FileShareProgress) {},
+			OnCodeReceive: func(code string) {
+				dialog.NewInformation("Code received", code, sui.Window).Show()
+			},
+		})
+
+	}, sui.Window)
 }
 
 func (sui *ServerUI) ChooseHostDir() {
@@ -29,8 +57,7 @@ func (sui *ServerUI) ChooseHostDir() {
 			return
 		}
 
-		sf := server.NewServerFunctions(lu.Path())
-		go sf.Start()
+		go sui.Functions.Host(lu.Path())
 
 		logWindow := fyne.CurrentApp().NewWindow("Server Logs")
 		logWindow.Resize(fyne.NewSize(500, 500))
@@ -42,7 +69,7 @@ func (sui *ServerUI) ChooseHostDir() {
 		logWindow.Show()
 
 		go func() {
-			for l := range sf.LogCh {
+			for l := range sui.Functions.LogCh {
 				switch l.Type {
 				case "api_log":
 					if l.Error != nil {

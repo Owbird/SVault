@@ -21,8 +21,9 @@ func main() {
 
 	menus := []*fyne.Menu{
 		fyne.NewMenu("Vaults", fyne.NewMenuItem("New Vault", hui.CreateVault)),
-		fyne.NewMenu("File Server",
-			fyne.NewMenuItem("Host", sui.ChooseHostDir),
+		fyne.NewMenu("File Sharing",
+			fyne.NewMenuItem("Host Directory", sui.ChooseHostDir),
+			fyne.NewMenuItem("Share file", sui.ShareFile),
 			fyne.NewMenuItem("Settings", sui.ServerSettings),
 		),
 		fyne.NewMenu("VFS", fyne.NewMenuItem("Mount", vfs.Mount)),
