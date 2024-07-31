@@ -41,8 +41,11 @@ func (sf *ServerFunctions) Host(dir string) {
 	sf.server.Start()
 }
 
-func (sf *ServerFunctions) Share(file string, callbacks ShareCallBacks) {
+func (sf *ServerFunctions) Receive(code string) error {
+	return sf.server.Receive(code)
+}
 
+func (sf *ServerFunctions) Share(file string, callbacks ShareCallBacks) {
 	progressCh := make(chan models.FileShareProgress, 1)
 
 	code, st, err := sf.server.Share(file, progressCh)
@@ -54,7 +57,6 @@ func (sf *ServerFunctions) Share(file string, callbacks ShareCallBacks) {
 	}
 
 	if callbacks.OnCodeReceive != nil {
-
 		callbacks.OnCodeReceive(code)
 	}
 
@@ -86,8 +88,6 @@ func (sf *ServerFunctions) Share(file string, callbacks ShareCallBacks) {
 					callbacks.OnProgressChange(progress)
 				}
 			}
-
 		}
 	}()
-
 }

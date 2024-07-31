@@ -24,6 +24,7 @@ func main() {
 		fyne.NewMenu("File Sharing",
 			fyne.NewMenuItem("Host Directory", sui.ChooseHostDir),
 			fyne.NewMenuItem("Share file", sui.ShareFile),
+			fyne.NewMenuItem("Receive file", sui.ReceiveFile),
 			fyne.NewMenuItem("Settings", sui.ServerSettings),
 		),
 		fyne.NewMenu("VFS", fyne.NewMenuItem("Mount", vfs.Mount)),

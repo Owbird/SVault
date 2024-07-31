@@ -25,6 +25,33 @@ func NewServerUI(window fyne.Window) *ServerUI {
 	}
 }
 
+func (sui *ServerUI) ReceiveFile() {
+	codeInput := widget.NewEntry()
+	codeInput.SetPlaceHolder("2-code-here")
+
+	codeForm := widget.NewFormItem("Code", codeInput)
+
+	formItems := []*widget.FormItem{
+		codeForm,
+	}
+
+	callback := func(create bool) {
+		if create {
+			if err := sui.Functions.Receive(codeInput.Text); err != nil {
+				dialog.NewError(err, sui.Window)
+			}
+		}
+	}
+
+	dialog.NewForm("Enter code",
+		"Receive",
+		"Cancel",
+		formItems,
+		callback,
+		sui.Window,
+	).Show()
+}
+
 func (sui *ServerUI) ShareFile() {
 	dialog.ShowFileOpen(func(uc fyne.URIReadCloser, err error) {
 		if err != nil {
@@ -46,7 +73,6 @@ func (sui *ServerUI) ShareFile() {
 				dialog.NewInformation("Code received", code, sui.Window).Show()
 			},
 		})
-
 	}, sui.Window)
 }
 
