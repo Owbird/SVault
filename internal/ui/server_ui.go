@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/Owbird/SVault-Engine/pkg/config"
 	"github.com/Owbird/SVault-Engine/pkg/models"
+	engineServer "github.com/Owbird/SVault-Engine/pkg/server"
 	"github.com/owbird/svault/internal/server"
 	"github.com/skratchdot/open-golang/open"
 )
@@ -61,7 +62,7 @@ func (sui *ServerUI) ShareFile() {
 
 		file := uc.URI().Path()
 
-		sui.Functions.Share(file, server.ShareCallBacks{
+		sui.Functions.Share(file, engineServer.ShareCallBacks{
 			OnFileSent: func() {
 				dialog.NewInformation("File sent", "File sent successfully", sui.Window).Show()
 			},
