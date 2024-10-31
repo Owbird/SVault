@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"fyne.io/fyne/theme"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/validation"
@@ -52,24 +53,24 @@ func (hui *HomeUI) ViewVault(vault string) {
 			vaultWindow := fyne.CurrentApp().NewWindow(fmt.Sprintf("%v vault", vault))
 
 			updateContentUI := func() {
-				fileCards := []fyne.CanvasObject{}
-
 				files, err := hui.Vault.GetVault(vault, vaultPwdInput.Text)
 				if err != nil {
 					dialog.NewError(err, hui.Window).Show()
 					return
 				}
 
-				for _, file := range files {
-					fileCards = append(fileCards, widget.NewCard(
-						filepath.Base(file.Name),
-						file.ModTime.Format("January 2, 2006"),
-						container.NewStack(),
-					),
-					)
-				}
+				fileList := widget.NewList(
+					func() int { return len(files) },
+					func() fyne.CanvasObject {
+						return container.NewHBox(widget.NewIcon(theme.FileIcon()), widget.NewLabel(""))
+					},
+					func(id widget.ListItemID, item fyne.CanvasObject) {
+						hBox := item.(*fyne.Container)
+						hBox.Objects[1].(*widget.Label).SetText(filepath.Base(files[id].Name))
+					},
+				)
 
-				vaultWindow.SetContent(container.NewHBox(fileCards...))
+				vaultWindow.SetContent(fileList)
 			}
 
 			menus := []*fyne.Menu{

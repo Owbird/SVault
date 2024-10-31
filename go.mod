@@ -13,6 +13,7 @@ require (
 replace github.com/Owbird/SVault-Engine => ./engine
 
 require (
+	fyne.io/fyne v1.4.3 // indirect
 	fyne.io/systray v1.11.0 // indirect
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
