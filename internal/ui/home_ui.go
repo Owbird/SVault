@@ -25,7 +25,7 @@ func NewHomeUI(window fyne.Window) *HomeUI {
 	}
 }
 
-func (hui *HomeUI) ViewVault(vault string) {
+func (hui *HomeUI) AuthorizeVault(vault string, callback func(pwd string), window fyne.Window) {
 	vaultPwdInput := widget.NewEntry()
 	vaultPwdInput.SetPlaceHolder("Enter Password")
 	vaultPwdInput.Validator = validation.NewRegexp("\\S+", "Field is required")
@@ -36,113 +36,102 @@ func (hui *HomeUI) ViewVault(vault string) {
 		vaultPwdForm,
 	}
 
-	callback := func(proceed bool) {
-		if proceed {
+	formDialog := dialog.NewForm("Authorize Vault",
+		"Proceed",
+		"Cancel",
+		formItems,
+		func(proceed bool) {
+			if proceed {
+				pwdMatch, err := hui.Vault.AuthVault(vault, vaultPwdInput.Text)
+				if err != nil {
+					dialog.NewError(err, window).Show()
+					return
+				}
 
-			pwdMatch, err := hui.Vault.AuthVault(vault, vaultPwdInput.Text)
+				if !pwdMatch {
+					dialog.NewError(fmt.Errorf("Passwords do not match"), window).Show()
+					return
+				}
+
+				callback(vaultPwdInput.Text)
+			}
+		},
+		window,
+	)
+
+	formDialog.Resize(fyne.NewSize(300, 200))
+	formDialog.Show()
+}
+
+func (hui *HomeUI) ViewVault(vault string) {
+	callback := func(pwd string) {
+		vaultWindow := fyne.CurrentApp().NewWindow(fmt.Sprintf("%v vault", vault))
+
+		files, err := hui.Vault.GetVault(vault, pwd)
+		if err != nil {
+			dialog.NewError(err, hui.Window).Show()
+			return
+		}
+
+		fileList := widget.NewList(
+			func() int { return len(files) },
+			func() fyne.CanvasObject {
+				return container.NewHBox(widget.NewIcon(theme.FileIcon()), widget.NewLabel(""))
+			},
+			func(id widget.ListItemID, item fyne.CanvasObject) {
+				hBox := item.(*fyne.Container)
+				hBox.Objects[1].(*widget.Label).SetText(filepath.Base(files[id].Name))
+			},
+		)
+
+		updateFiles := func() {
+			files, err = hui.Vault.GetVault(vault, pwd)
 			if err != nil {
 				dialog.NewError(err, hui.Window).Show()
 				return
 			}
 
-			if !pwdMatch {
-				dialog.NewError(fmt.Errorf("Passwords do not match"), hui.Window).Show()
-				return
-			}
-
-			vaultWindow := fyne.CurrentApp().NewWindow(fmt.Sprintf("%v vault", vault))
-
-			updateContentUI := func() {
-				files, err := hui.Vault.GetVault(vault, vaultPwdInput.Text)
-				if err != nil {
-					dialog.NewError(err, hui.Window).Show()
-					return
-				}
-
-				fileList := widget.NewList(
-					func() int { return len(files) },
-					func() fyne.CanvasObject {
-						return container.NewHBox(widget.NewIcon(theme.FileIcon()), widget.NewLabel(""))
-					},
-					func(id widget.ListItemID, item fyne.CanvasObject) {
-						hBox := item.(*fyne.Container)
-						hBox.Objects[1].(*widget.Label).SetText(filepath.Base(files[id].Name))
-					},
-				)
-
-				fileList.OnSelected = func(id widget.ListItemID) {
-					menu := fyne.NewMenu("",
-						fyne.NewMenuItem("Delete", func() {
-							formDialog := dialog.NewForm("Authorize Vault",
-								"Proceed",
-								"Cancel",
-								formItems,
-								func(b bool) {
-									pwdMatch, err := hui.Vault.AuthVault(vault, vaultPwdInput.Text)
-									if err != nil {
-										dialog.NewError(err, hui.Window).Show()
-										return
-									}
-
-									if !pwdMatch {
-										dialog.NewError(fmt.Errorf("Passwords do not match"), hui.Window).Show()
-										return
-									}
-
-									hui.Vault.DeleteFile(files[id].Name, vault, vaultPwdInput.Text)
-
-									files, _ = hui.Vault.GetVault(vault, vaultPwdInput.Text)
-
-									fileList.Refresh()
-								},
-								vaultWindow,
-								
-							)
-
-							formDialog.Resize(fyne.NewSize(300, 200))
-							formDialog.Show()
-						}),
-					)
-					widget.ShowPopUpMenuAtPosition(menu, vaultWindow.Canvas(), fyne.CurrentApp().Driver().AbsolutePositionForObject(fileList))
-				}
-
-				vaultWindow.SetContent(fileList)
-			}
-
-			menus := []*fyne.Menu{
-				fyne.NewMenu("File", fyne.NewMenuItem("Add file", func() {
-					dialog.ShowFileOpen(func(uc fyne.URIReadCloser, err error) {
-						if err != nil {
-							dialog.NewError(err, vaultWindow).Show()
-						}
-
-						if uc != nil {
-							hui.Vault.AddFile(uc.URI().Path(), vault, vaultPwdInput.Text)
-						}
-						updateContentUI()
-					}, vaultWindow)
-				})),
-			}
-
-			vaultWindow.SetMainMenu(fyne.NewMainMenu(menus...))
-
-			updateContentUI()
-
-			vaultWindow.Resize(fyne.NewSize(500, 500))
-			vaultWindow.Show()
+			fileList.Refresh()
 		}
+
+		fileList.OnSelected = func(id widget.ListItemID) {
+			menu := fyne.NewMenu("Actions",
+				fyne.NewMenuItem("Delete", func() {
+					hui.AuthorizeVault(vault, func(pwd string) {
+						hui.Vault.DeleteFile(files[id].Name, vault, pwd)
+
+						updateFiles()
+					}, vaultWindow)
+				}),
+			)
+			widget.ShowPopUpMenuAtPosition(menu, vaultWindow.Canvas(), fyne.CurrentApp().Driver().AbsolutePositionForObject(fileList))
+		}
+
+		vaultWindow.SetContent(fileList)
+
+		menus := []*fyne.Menu{
+			fyne.NewMenu("File", fyne.NewMenuItem("Add file", func() {
+				dialog.ShowFileOpen(func(uc fyne.URIReadCloser, err error) {
+					if err != nil {
+						dialog.NewError(err, vaultWindow).Show()
+					}
+
+					if uc != nil {
+						hui.Vault.AddFile(uc.URI().Path(), vault, pwd)
+					}
+
+					updateFiles()
+				}, vaultWindow)
+			})),
+		}
+
+		vaultWindow.SetMainMenu(fyne.NewMainMenu(menus...))
+
+		vaultWindow.Resize(fyne.NewSize(500, 500))
+		vaultWindow.Show()
 	}
 
-	formDialog := dialog.NewForm("Authorize Vault",
-		"Proceed",
-		"Cancel",
-		formItems,
-		callback,
-		hui.Window,
-	)
-
-	formDialog.Resize(fyne.NewSize(300, 200))
-	formDialog.Show()
+	hui.AuthorizeVault(vault, callback, hui.Window)
 }
 
 func (hui *HomeUI) Home() fyne.CanvasObject {
