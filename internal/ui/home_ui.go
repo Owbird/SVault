@@ -70,6 +70,42 @@ func (hui *HomeUI) ViewVault(vault string) {
 					},
 				)
 
+				fileList.OnSelected = func(id widget.ListItemID) {
+					menu := fyne.NewMenu("",
+						fyne.NewMenuItem("Delete", func() {
+							formDialog := dialog.NewForm("Authorize Vault",
+								"Proceed",
+								"Cancel",
+								formItems,
+								func(b bool) {
+									pwdMatch, err := hui.Vault.AuthVault(vault, vaultPwdInput.Text)
+									if err != nil {
+										dialog.NewError(err, hui.Window).Show()
+										return
+									}
+
+									if !pwdMatch {
+										dialog.NewError(fmt.Errorf("Passwords do not match"), hui.Window).Show()
+										return
+									}
+
+									hui.Vault.DeleteFile(files[id].Name, vault, vaultPwdInput.Text)
+
+									files, _ = hui.Vault.GetVault(vault, vaultPwdInput.Text)
+
+									fileList.Refresh()
+								},
+								vaultWindow,
+								
+							)
+
+							formDialog.Resize(fyne.NewSize(300, 200))
+							formDialog.Show()
+						}),
+					)
+					widget.ShowPopUpMenuAtPosition(menu, vaultWindow.Canvas(), fyne.CurrentApp().Driver().AbsolutePositionForObject(fileList))
+				}
+
 				vaultWindow.SetContent(fileList)
 			}
 
