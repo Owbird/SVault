@@ -42,14 +42,9 @@ func (hui *HomeUI) AuthorizeVault(vault string, callback func(pwd string), windo
 		formItems,
 		func(proceed bool) {
 			if proceed {
-				pwdMatch, err := hui.Vault.AuthVault(vault, vaultPwdInput.Text)
+				 err := hui.Vault.AuthVault(vault, vaultPwdInput.Text)
 				if err != nil {
 					dialog.NewError(err, window).Show()
-					return
-				}
-
-				if !pwdMatch {
-					dialog.NewError(fmt.Errorf("Passwords do not match"), window).Show()
 					return
 				}
 

@@ -48,6 +48,6 @@ func (vf *VaultFunctions) DeleteFile(file, vault, password string) error {
 	return vf.vault.DeleteFile(file, vault, password)
 }
 
-func (vf *VaultFunctions) AuthVault(vault, password string) (bool, error) {
+func (vf *VaultFunctions) AuthVault(vault, password string) error {
 	return vf.vault.Auth(vault, password)
 }
