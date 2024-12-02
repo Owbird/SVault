@@ -51,3 +51,7 @@ func (vf *VaultFunctions) DeleteFile(file, vault, password string) error {
 func (vf *VaultFunctions) AuthVault(vault, password string) error {
 	return vf.vault.Auth(vault, password)
 }
+
+func (vf *VaultFunctions) DeleteVault(vault, password string) error {
+	return vf.vault.DeleteVault(vault, password)
+}

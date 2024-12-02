@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/validation"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/owbird/svault/internal/vault"
 )
@@ -42,7 +43,7 @@ func (hui *HomeUI) AuthorizeVault(vault string, callback func(pwd string), windo
 		formItems,
 		func(proceed bool) {
 			if proceed {
-				 err := hui.Vault.AuthVault(vault, vaultPwdInput.Text)
+				err := hui.Vault.AuthVault(vault, vaultPwdInput.Text)
 				if err != nil {
 					dialog.NewError(err, window).Show()
 					return
@@ -141,15 +142,55 @@ func (hui *HomeUI) Home() fyne.CanvasObject {
 
 	cards := []fyne.CanvasObject{}
 
-	for _, vault := range vaults {
-		button := widget.NewButton(vault.Name, func() { hui.ViewVault(vault.Name) })
+	var cardsContainer *fyne.Container
 
-		card := container.NewCenter(button)
-		cards = append(cards, card)
+	deleteVault := func(vault string) {
+		hui.AuthorizeVault(vault, func(pwd string) {
+			hui.Vault.DeleteVault(vault, pwd)
 
+			for idx, card := range cards {
+
+				cardLabel := card.(*fyne.Container).Objects[0].(*fyne.Container).Objects[0].(*widget.Label).Text
+
+				if cardLabel == vault {
+					cards = append(cards[:idx], cards[idx+1:]...)
+					break
+				}
+			}
+
+			cardsContainer.Objects = cards
+
+			cardsContainer.Refresh()
+		}, hui.Window)
 	}
 
-	return container.NewGridWithColumns(4, cards...)
+	for _, vault := range vaults {
+		nameLabel := widget.NewLabel(vault.Name)
+
+		createdAt := widget.NewLabel(vault.CreatedAt.Format("Jan 02, 2006"))
+
+		actions := container.New(layout.NewGridLayoutWithRows(2),
+			widget.NewButton("View", func() {
+				hui.ViewVault(vault.Name)
+			}),
+
+			widget.NewButton("Delete", func() { deleteVault(vault.Name) }),
+		)
+
+		card := container.NewVBox(
+			nameLabel,
+			createdAt,
+			actions,
+		)
+
+		cardContainer := container.NewCenter(card)
+
+		cards = append(cards, cardContainer)
+	}
+
+	cardsContainer = container.NewGridWithColumns(4, cards...)
+
+	return cardsContainer
 }
 
 func (hui *HomeUI) CreateVault() {
