@@ -14,6 +14,13 @@ import (
 	"github.com/skratchdot/open-golang/open"
 )
 
+type LogStatus = string
+
+const (
+	LogSuccess LogStatus = "success"
+	LogError   LogStatus = "error"
+)
+
 type ServerUI struct {
 	Window    fyne.Window
 	Functions *server.ServerFunctions
@@ -95,77 +102,48 @@ func (sui *ServerUI) ChooseHostDir() {
 
 		logWindow.Show()
 
+		showLog := func(status LogStatus, text string) {
+			if status == LogError {
+				logsContainer.Add(
+					widget.NewRichText(
+						&widget.TextSegment{
+							Text: text,
+							Style: widget.RichTextStyle{
+								ColorName: "red",
+							},
+						},
+					),
+				)
+			} else {
+				logsContainer.Add(
+					widget.NewRichText(&widget.TextSegment{Text: text}))
+			}
+		}
+
 		go func() {
 			for l := range sui.Functions.LogCh {
 				switch l.Type {
-				case "api_log":
+				case models.API_LOG:
 					if l.Error != nil {
-						logsContainer.Add(
-							widget.NewRichText(
-								&widget.TextSegment{
-									Text: fmt.Sprintf("[!] API Error: %v", l.Error),
-									Style: widget.RichTextStyle{
-										ColorName: "red",
-									},
-								},
-							),
-						)
+						showLog(LogError, fmt.Sprintf("[!] API Log [error]: %v", l.Error.Error()))
 					} else {
-						logsContainer.Add(
-							widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] API Log: %v", l.Message)}))
+						showLog(LogSuccess, fmt.Sprintf("[+] API Log: %v", l.Message))
 					}
 
-				case "web_ui_build":
-					if l.Error != nil {
-						logsContainer.Add(
-							widget.NewRichText(
-								&widget.TextSegment{
-									Text: fmt.Sprintf("[!] Web Build Error: %v", l.Error),
-									Style: widget.RichTextStyle{
-										ColorName: "red",
-									},
-								},
-							),
-						)
-					} else {
-						logsContainer.Add(
-							widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] Web Build Running: %v", l.Message)}))
-					}
-				case "serve_web_ui_local":
-					if l.Error != nil {
-						logsContainer.Add(
-							widget.NewRichText(
-								&widget.TextSegment{
-									Text: fmt.Sprintf("[!] Local Web Error: %v", l.Error),
-									Style: widget.RichTextStyle{
-										ColorName: "red",
-									},
-								},
-							),
-						)
-					} else {
-						logsContainer.Add(
-							widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] Local Web Running: %v", l.Message)}))
-					}
-				case "serve_web_ui_remote":
-					logsContainer.Add(
-						widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] Remote Web Running: %v", l.Message)}))
+				case models.SERVE_WEB_UI_NETWORK:
+					showLog(LogSuccess, fmt.Sprintf("[+] Network Web Running: %v", l.Message))
+
+				case models.SERVE_WEB_UI_REMOTE:
+					showLog(LogSuccess, fmt.Sprintf("[+] Remote Web Running: %v", l.Message))
 
 					open.Run(l.Message)
 					open.Run("https://loca.lt/mytunnelpassword")
 
 				default:
 					if l.Error != nil {
-						logsContainer.Add(
-							widget.NewRichText(
-								&widget.TextSegment{
-									Text: fmt.Sprintf("[!] Error: %v", l.Error),
-								},
-							),
-						)
+						showLog(LogError, fmt.Sprintf("[!] Error: %v", l.Error.Error()))
 					} else {
-						logsContainer.Add(
-							widget.NewRichText(&widget.TextSegment{Text: fmt.Sprintf("[+] Log: %v", l.Message)}))
+						showLog(LogError, fmt.Sprintf("[+] Log: %v", l.Message))
 					}
 
 				}
