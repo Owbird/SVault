@@ -69,8 +69,11 @@ func (sui *ServerUI) ShareFile() {
 
 		file := uc.URI().Path()
 
+		var codeReceivedDialog dialog.Dialog
+
 		sui.Functions.Share(file, engineServer.ShareCallBacks{
 			OnFileSent: func() {
+				codeReceivedDialog.Hide()
 				dialog.NewInformation("File sent", "File sent successfully", sui.Window).Show()
 			},
 			OnSendErr: func(err error) {
@@ -78,7 +81,9 @@ func (sui *ServerUI) ShareFile() {
 			},
 			OnProgressChange: func(progress models.FileShareProgress) {},
 			OnCodeReceive: func(code string) {
-				dialog.NewInformation("Code received", code, sui.Window).Show()
+				codeReceivedDialog = dialog.NewInformation("Code received", code, sui.Window)
+
+				codeReceivedDialog.Show()
 			},
 		})
 	}, sui.Window)
