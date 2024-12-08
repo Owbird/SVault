@@ -119,6 +119,10 @@ func (hui *HomeUI) ViewVault(vault string) {
 					updateFiles()
 				}, vaultWindow)
 			})),
+
+			fyne.NewMenu("Mount", fyne.NewMenuItem("Mount", func() {
+				hui.Vault.MountVault(vault, pwd)
+			})),
 		}
 
 		vaultWindow.SetMainMenu(fyne.NewMainMenu(menus...))

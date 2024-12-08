@@ -4,7 +4,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"github.com/owbird/svault/internal/ui"
-	"github.com/owbird/svault/internal/vfs"
 )
 
 func main() {
@@ -17,8 +16,6 @@ func main() {
 	hui := ui.NewHomeUI(w)
 	sui := ui.NewServerUI(w)
 
-	vfs := vfs.NewVFSFunctions()
-
 	menus := []*fyne.Menu{
 		fyne.NewMenu("Vaults", fyne.NewMenuItem("New Vault", hui.CreateVault)),
 		fyne.NewMenu("File Sharing",
@@ -27,7 +24,6 @@ func main() {
 			fyne.NewMenuItem("Receive file", sui.ReceiveFile),
 			fyne.NewMenuItem("Settings", sui.ServerSettings),
 		),
-		fyne.NewMenu("VFS", fyne.NewMenuItem("Mount", vfs.Mount)),
 	}
 
 	w.SetMainMenu(fyne.NewMainMenu(menus...))

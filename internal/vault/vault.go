@@ -1,6 +1,7 @@
 package vault
 
 import (
+	"github.com/Owbird/SVault-Engine/pkg/filesystem"
 	"github.com/Owbird/SVault-Engine/pkg/models"
 	"github.com/Owbird/SVault-Engine/pkg/vault"
 )
@@ -54,4 +55,8 @@ func (vf *VaultFunctions) AuthVault(vault, password string) error {
 
 func (vf *VaultFunctions) DeleteVault(vault, password string) error {
 	return vf.vault.DeleteVault(vault, password)
+}
+
+func (vf *VaultFunctions) MountVault(vault, password string) {
+	filesystem.Mount(vault, password)
 }
