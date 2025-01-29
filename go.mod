@@ -5,6 +5,7 @@ go 1.22.1
 toolchain go1.22.3
 
 require (
+	fyne.io/fyne v1.4.3
 	fyne.io/fyne/v2 v2.5.0
 	github.com/Owbird/SVault-Engine v0.0.0-20240722101551-318e3ed1bf76
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
@@ -13,7 +14,6 @@ require (
 replace github.com/Owbird/SVault-Engine => ./engine
 
 require (
-	fyne.io/fyne v1.4.3 // indirect
 	fyne.io/systray v1.11.0 // indirect
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
@@ -35,18 +35,17 @@ require (
 	github.com/go-text/typesetting v0.1.0 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b // indirect
+	github.com/golang/glog v1.2.4 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/flatbuffers v1.12.1 // indirect
-	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/uuid v1.4.0 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jeandeaual/go-locale v0.0.0-20240223122105-ce5225dcaa49 // indirect
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
 	github.com/klauspost/compress v1.17.2 // indirect
+	github.com/localtunnel/go-localtunnel v0.0.0-20170326223115-8a804488f275 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/martinlindhe/notify v0.0.0-20181008203735-20632c9a275a // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
